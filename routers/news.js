@@ -1,31 +1,58 @@
 const router = require("express").Router();
 const News = require("../models/news");
 
-router.get("/news", (req, res) => {});
-
-router.get("/:id", (req, res) => {
-  News.findById(req.params.id, (err, data) => {
-    if (err) {
-      return res.status(400).json({ message: "Error: " + err });
-    }
-    res.json(data);
-  });
+router.get("/year", async (req, res) => {
+  try {
+    const year = await News.distinct("year");
+    res.json({ year });
+  } catch (err) {
+    res.status(400).json({ message: "Error: " + err });
+  }
 });
 
-router.get("/", (req, res) => {});
+router.get("/:id", async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    res.json(news);
+  } catch (error) {
+    res.status(400).json({ message: "Error: " + err });
+  }
+});
 
-router.post("/", (req, res) => {
-  const news = new News(req.body);
+router.get("/", async (req, res) => {
+  try {
+    const news = await News.find({ year: req.query.year });
+    res.json(news);
+  } catch (error) {
+    res.status(400).json({ message: "Error: " + err });
+  }
+});
 
-  news.save((err, data) => {
-    if (err) {
-      return res.status(400).json({ message: "Error created " + err });
-    }
+router.post("/", async (req, res) => {
+  try {
+    const news = await new News(req.body);
+    const data = await news.save();
     res.json({ message: "Category was created", data });
-  });
+  } catch (err) {
+    res.status(400).json({ message: "Error created " + err });
+  }
 });
 
-router.patch("/:id", (req, res) => {});
+router.patch("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await News.findByIdAndUpdate(id, req.body, {
+      runValidators: true,
+    });
+
+    res.json({
+      message: "Updated",
+      id: data._id,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "Error update " + err });
+  }
+});
 
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
