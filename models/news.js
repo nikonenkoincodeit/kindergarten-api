@@ -24,11 +24,11 @@ const schema = db.Schema(
       maxLength: 4,
       required: true,
     },
-    picture: {
-      type: String,
-      default:
-        "https://img1.akspic.ru/crops/0/9/1/1/7/171190/171190-nacionalnyj_park_kaziranga-atmosfera-mir-prirodnyj_landshaft-purpur-7680x4320.png",
-    },
+    // picture: {
+    //   type: String,
+    //   default:
+    //     "https://img1.akspic.ru/crops/0/9/1/1/7/171190/171190-nacionalnyj_park_kaziranga-atmosfera-mir-prirodnyj_landshaft-purpur-7680x4320.png",
+    // },
   },
   { versionKey: false }
 );

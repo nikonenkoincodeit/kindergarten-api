@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const News = require("../models/news");
 
 router.get("/news", (req, res) => {});
 
@@ -13,10 +14,29 @@ router.get("/:id", (req, res) => {
 
 router.get("/", (req, res) => {});
 
-router.post("/", (req, res) => {});
+router.post("/", (req, res) => {
+  const news = new News(req.body);
 
-router.update("/:id", (req, res) => {});
+  news.save((err, data) => {
+    if (err) {
+      return res.status(400).json({ message: "Error created " + err });
+    }
+    res.json({ message: "Category was created", data });
+  });
+});
 
-router.delete("/:id", (req, res) => {});
+router.patch("/:id", (req, res) => {});
+
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
+  News.findByIdAndDelete(id, (err, data) => {
+    if (err) {
+      return res.status(400).json({ message: "Error: " + err });
+    }
+    res.json({
+      message: "Delete",
+    });
+  });
+});
 
 module.exports = router;
